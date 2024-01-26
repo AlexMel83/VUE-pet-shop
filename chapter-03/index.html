@@ -42,7 +42,21 @@
                         <p v-html="product.description"></p>
                         <p class="price"> {{product.price | formatPrice}} </p>
                         <button class="btn btn-success" @click="addToCart" v-if="canAddToCart">Add to cart</button>
-                        <button type="button" class="btn btn-outline-secondary" disabled v-else>Add to cart</button>
+                        <button type="button" class="btn btn-outline-secondary" disabled 
+                        v-else>Add to cart</button>
+                        <span class="inventory-message" v-if="product.availableInventory - cartItemCount === 0">
+                            All Out!
+                        </span>
+                        <span class="inventory-message" v-else-if="product.availableInventory - cartItemCount < 5">
+                            Only {{product.availableInventory - cartItemCount}} left!
+                        </span>
+                        <span class="inventory-message" v-else>
+                            Buy Now!
+                        </span>
+                        <div class="rating">
+                            <span :class="{'rating-active': checkRating(n)}"
+                            v-for="n in 5">☆ </span>
+                        </div>
                         <p v-text="cart.length"></p>
                         <p class="price">{{cart.length * product.price | formatPrice}}</p>
                     </div>
@@ -52,11 +66,11 @@
                 <div class="row">
                     <div class="col-md-6">
                         <strong>First Name:</strong>
-                        <input type="text" v-model="order.firstName" class="form-control">
+                        <input type="text" v-model.trim="order.firstName" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <strong>Last Name:</strong>
-                        <input type="text" v-model="order.lastName" class="form-control">
+                        <input type="text" v-model.trim="order.lastName" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
@@ -64,7 +78,7 @@
                         <strong>Address:</strong>
                     </div>
                     <div class="col-md-12">
-                        <input type="text" v-model="order.address" class="form-control">
+                        <input type="text" v-model.trim="order.address" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
@@ -72,7 +86,7 @@
                         <strong>City:</strong>
                     </div>
                     <div class="col-md-12">
-                        <input type="text" v-model="order.city" class="form-control">
+                        <input type="text" v-model.trim="order.city" class="form-control">
                     </div>
                 </div>
                <div class="row">
@@ -85,7 +99,7 @@
                     </div>
                     <div class="form-group col-md-6 col-md-offset-4">
                         <strong>Zip / Postal Code:</strong>
-                        <input type="text" v-model="order.zip" class="form-control">
+                        <input type="text" v-model.number="order.zip" class="form-control">
                     </div>
                     <div class="form-group col-md-6 boxes">
                         <input type="checkbox" 
@@ -141,7 +155,8 @@
                 description: "A 25 pound bag of <em>irresistible</em>," + "organic goodness for your cat.",
                 price: 2000,
                 image: "assets/images/product-fullsize.png",
-                availableInventory: 5
+                availableInventory: 10,
+                rating: 3,
             },
             cart: [],
             showProduct: true,
@@ -192,6 +207,9 @@
                 }
             },
         methods: {
+            checkRating(n){
+                return this.product.rating - n >= 0;
+            },
             addToCart: function() {
                 this.cart.push( this.product.id);
             },
