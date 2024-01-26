@@ -7,6 +7,7 @@
     <script src="https://unpkg.com/vue@2.6.12/dist/vue.min.js"></script>
     <link rel="stylesheet" href="assets/css/app.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.js"></script>
 </head>
 <body>
     <div id="app">
@@ -31,35 +32,38 @@
         </header>
         <main>
             <div v-if="showProduct">
+                <div v-for="product in products">
                 <div class="row product">
-                    <div class="col">
+                    <div class="col-md-5 col-md-offset-0">
                         <figure>
                             <img :src="product.image" alt="">
                         </figure>
                     </div>
-                    <div class="col col-expand">
+                    <div class="col-md-6 col-md-offset-0 description">
                         <h1 v-text="product.title"></h1>
                         <p v-html="product.description"></p>
                         <p class="price"> {{product.price | formatPrice}} </p>
-                        <button class="btn btn-success" @click="addToCart" v-if="canAddToCart">Add to cart</button>
+                        <button class="btn btn-success" @click="addToCart(product)" v-if="canAddToCart(product)">Add to cart</button>
                         <button type="button" class="btn btn-outline-secondary" disabled 
                         v-else>Add to cart</button>
-                        <span class="inventory-message" v-if="product.availableInventory - cartItemCount === 0">
+                        <span class="inventory-message" v-if="product.availableInventory - cartCount(product.id) === 0">
                             All Out!
                         </span>
-                        <span class="inventory-message" v-else-if="product.availableInventory - cartItemCount < 5">
-                            Only {{product.availableInventory - cartItemCount}} left!
+                        <span class="inventory-message" v-else-if="product.availableInventory - cartCount(product.id) < 5">
+                            Only {{product.availableInventory - cartCount(product.id)}} left!
                         </span>
                         <span class="inventory-message" v-else>
                             Buy Now!
                         </span>
                         <div class="rating">
-                            <span :class="{'rating-active': checkRating(n)}"
+                            <span :class="{'rating-active': checkRating(n, product)}"
                             v-for="n in 5">☆ </span>
                         </div>
                         <p v-text="cart.length"></p>
                         <p class="price">{{cart.length * product.price | formatPrice}}</p>
                     </div>
+                </div>
+                <hr />
                 </div>
             </div>
             <div v-else >
@@ -149,15 +153,7 @@
         el: '#app',
         data: {
             sitename: title,
-            product: {
-                id: 1001,
-                title: "Cat Food, 25lb bag",
-                description: "A 25 pound bag of <em>irresistible</em>," + "organic goodness for your cat.",
-                price: 2000,
-                image: "assets/images/product-fullsize.png",
-                availableInventory: 10,
-                rating: 3,
-            },
+            products: [],
             cart: [],
             showProduct: true,
             order: {
@@ -185,8 +181,17 @@
             cartItemCount: function(){ 
                 return this.cart.length || '';
             },
-            canAddToCart: function(){
-                return this.product.availableInventory > this.cartItemCount;
+            canAddToCart(aProduct){
+                return aProduct.availableInventory > this.cartCount(aProduct.id);
+            },
+            cartCount(id){
+                let count = 0;
+                for(let i=0;i<this.cart.length; i++){
+                    if(this.cart[i] === id){
+                        count++;
+                    }
+                }
+                return count;
             }
         },
         filters: {
@@ -206,12 +211,19 @@
                     }
                 }
             },
+        created: function(){
+            axios.get('./products.json')
+                .then((response)=>{
+                    this.products=response.data.products;
+                    console.log(this.products);
+                });
+        },
         methods: {
-            checkRating(n){
-                return this.product.rating - n >= 0;
+            checkRating(n, myProduct){
+                return this.myProduct.rating - n >= 0;
             },
-            addToCart: function() {
-                this.cart.push( this.product.id);
+            addToCart(aProduct) {
+                this.cart.push( aProduct.id);
             },
             showCheckout() {
                 this.showProduct = this.showProduct ? false : true;
