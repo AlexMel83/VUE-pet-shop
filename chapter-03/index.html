@@ -10,42 +10,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.js"></script>
 </head>
 <body>
+<div class="container">
     <div id="app">
-        <header class="navbar bg-body-tertiary">
+        <header>
             <div class="navbar navbar-default">
-                <h1 v-text="sitename"></h1>
-            </div>
-            <div class="nav navbar-nav navbar-right cart d-flex">
-                <button type="button" class="btn btn-success" v-if="cart.length" @click="showCheckout">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
-                    </svg>
-                        {{ cartItemCount }}
-                </button>
-                <button type="button" class="btn btn-outline-secondary" disabled v-else>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
-                    </svg>
-                        {{ cartItemCount }}
-                </button>
+                <div class="navbar-header">
+                    <h1 v-text="sitename"></h1>
+                </div>
+                <div class="nav navbar-nav navbar-right cart">
+                    <button type="button" class="btn btn-success" v-if="cart.length" @click="showCheckout">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
+                        </svg>
+                            {{ cartItemCount }}
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" disabled v-else>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"></path>
+                        </svg>
+                            {{ cartItemCount }}
+                    </button>
+                </div>
             </div>
         </header>
         <main>
             <div v-if="showProduct">
                 <div v-for="product in products">
-                <div class="row product">
+                  <div class="row">
                     <div class="col-md-5 col-md-offset-0">
                         <figure>
-                            <img :src="product.image" alt="">
+                            <img class="product" :src="product.image" alt="">
                         </figure>
                     </div>
                     <div class="col-md-6 col-md-offset-0 description">
                         <h1 v-text="product.title"></h1>
                         <p v-html="product.description"></p>
-                        <p class="price"> {{product.price | formatPrice}} </p>
-                        <button class="btn btn-success" @click="addToCart(product)" v-if="canAddToCart(product)">Add to cart</button>
-                        <button type="button" class="btn btn-outline-secondary" disabled 
-                        v-else>Add to cart</button>
+                        <p class="price"> 
+                            {{product.price | formatPrice}} 
+                        </p>
+                        <template>
+                            <div>
+                                <button class="btn btn-success" @click="addToCart(product)" v-if="canAddToCart(product)">Add to cart</button>
+                                <button type="button" class="btn btn-outline-secondary" disabled v-else>Add to cart</button>
+                            </div>
+                        </template>
                         <span class="inventory-message" v-if="product.availableInventory - cartCount(product.id) === 0">
                             All Out!
                         </span>
@@ -59,8 +67,6 @@
                             <span :class="{'rating-active': checkRating(n, product)}"
                             v-for="n in 5">☆ </span>
                         </div>
-                        <p v-text="cart.length"></p>
-                        <p class="price">{{cart.length * product.price | formatPrice}}</p>
                     </div>
                 </div>
                 <hr />
@@ -141,11 +147,9 @@
                     </pre>
                 </div>
             </div>
-            </div>
         </main>
-
     </div>
-
+</div>
     <script>
         var APP_LOG_LIFECYCLE_EVENTS = true;
         let title = document.querySelector('title').innerText;
@@ -177,23 +181,6 @@
                 NV: 'Nevada',
             }
         },
-        computed: {
-            cartItemCount: function(){ 
-                return this.cart.length || '';
-            },
-            canAddToCart(aProduct){
-                return aProduct.availableInventory > this.cartCount(aProduct.id);
-            },
-            cartCount(id){
-                let count = 0;
-                for(let i=0;i<this.cart.length; i++){
-                    if(this.cart[i] === id){
-                        count++;
-                    }
-                }
-                return count;
-            }
-        },
         filters: {
                 formatPrice: function(price) {
                     if (!parseInt(price)){ return "";}
@@ -211,29 +198,60 @@
                     }
                 }
             },
-        created: function(){
-            axios.get('./products.json')
-                .then((response)=>{
-                    this.products=response.data.products;
-                    console.log(this.products);
-                });
-        },
         methods: {
             checkRating(n, myProduct){
-                return this.myProduct.rating - n >= 0;
+                return myProduct.rating - n >= 0;
             },
             addToCart(aProduct) {
-                this.cart.push( aProduct.id);
+                this.cart.push(aProduct.id);
             },
             showCheckout() {
                 this.showProduct = this.showProduct ? false : true;
             },
             submitForm(){
                 alert('Submitted');
+            },
+            canAddToCart(aProduct) {
+                return aProduct.availableInventory > this.cartCount(aProduct.id);
+            },
+            cartCount(id) {
+                let count = 0;
+                for (var i = 0; i < this.cart.length; i++) {
+                    if (this.cart[i] === id) {
+                    count++;
+                    }
+                }
+                return count;
+            },
+        },
+        computed: {
+            cartItemCount: function(){ 
+                return this.cart.length || '';
+            },
+            sortedProducts() {
+                if (this.products.length > 0) {
+                    let productsArray = this.products.slice(0);
+                    console.log(productsArray);
+                    console.log(this.products);
+                    function compare(a, b) {
+                    if (a.title.toLowerCase() < b.title.toLowerCase())
+                        return -1;
+                    if (a.title.toLowerCase() > b.title.toLowerCase())
+                        return 1;
+                    return 0;
+                    }
+                    return productsArray.sort(compare);
+                }
             }
         },
         beforeCreate: ()=> APP_LOG_LIFECYCLE_EVENTS ? console.log('beforeCreated'):nul,
-        created: ()=> APP_LOG_LIFECYCLE_EVENTS ? console.log('created'):null,
+        created: function () {
+            axios.get('./products.json')
+            .then((response) => {
+                this.products = response.data.products;
+                console.log(this.products);
+            });
+        },
         beforeMount: ()=>  APP_LOG_LIFECYCLE_EVENTS ? console.log('beforeMount'):null,
         mounted: ()=> APP_LOG_LIFECYCLE_EVENTS ? console.log('mounted'):null,
         beforeUpdate: ()=> APP_LOG_LIFECYCLE_EVENTS ? console.log('beforeUpdate'):null,
