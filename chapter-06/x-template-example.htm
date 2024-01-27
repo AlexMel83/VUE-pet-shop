@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X template example</title>
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.min.js"></script>
+</head>
+<body>
+    
+    <div id="app">
+        <h1 v-text="sitename"></h1>
+        <my-component />
+    </div>
+    <script type="text/x-template" id="my-component">
+        <p>
+            Hello from x-template, Hello world
+        </p>
+    </script>
+    <script>
+        const sitename = document.querySelector('title').innerText;
+        const MyComponent = {
+            template: '#my-component'
+        }
+        new Vue({
+            el: '#app',
+            components: {'my-component': MyComponent},
+            data(){
+                return {
+                    // sitename
+                }
+            }
+        })
+    </script>
+    
+</body>
+</html>

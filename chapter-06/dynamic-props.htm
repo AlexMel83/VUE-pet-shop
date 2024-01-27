@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic props</title>
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <my-component :text="message"></my-component>
+    </div>
+
+    <script>
+        const MyComponent = {
+            template: '<div>Hello {{text}}! {{tester1}} </div>',
+            props:['text'],
+            data(){
+                return {
+                    tester1: 'Testing text'
+                }
+            }
+        }
+
+        new Vue({
+            el: "#app",
+            components: {'my-component': MyComponent},
+            data(){
+                return {
+                    message: 'From Parent Component'
+                }
+            }
+        })
+    </script>
+    
+</body>
+</html>

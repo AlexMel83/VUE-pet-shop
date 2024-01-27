@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Props example</title>
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <my-component :num="myNumber" :str="passedString"
+            :even="myNumber" :obj="passedObject"></my-component>
+    </div>
+
+    <script>
+        const MyComponent = {
+            template: '<div>Number: {{num}}<br />String: {{str}} <br /><span v-if="even.validator">IsEven?: {{even}}</span><br/>Oject:{{obj.message}}</div>',
+            props: {
+                num: {
+                    type: Number,
+                    required: true
+                },
+                str: {
+                    type: String,
+                    default: "Hello World"
+                },
+                obj: {
+                    type: Object,
+                    default: ()=>{
+                        return {message: "Hello from object"}
+                    }
+                },
+                even: {
+                    validator: (value)=>{
+                        return (value % 2 === 0)
+                    }
+                }
+            }
+        }
+        new Vue({
+            el: "#app",
+            components: {'my-component': MyComponent},
+            data(){
+                return {
+                    passedString: "Hello from parrent!",
+                    myNumber: 43,
+                    passedObject: {message: 'Passed Object'}
+                }
+            }
+        })
+    </script>
+    
+</body>
+</html>
