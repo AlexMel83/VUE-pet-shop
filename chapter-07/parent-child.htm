@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent child</title>
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <form-component
+        :author="authorLabel"
+        :title="titleLabel"
+        @submit="writeLabel">
+        </form-component>
+    </div>
+    <script>
+        const FormComponent = {
+            template: `<div>
+                <form>
+                    <label for="title">{{title}}</label>
+                    <input id="title" type="text" /><br/>
+                    <label for="author">{{author}}</label>
+                    <input id="author" type="text" /><br/>
+                    <button @click="$emit('submit')">Submit</button>
+                </form>
+                </div>`,
+            props:['title','author'],
+        }
+        new Vue({
+            el: '#app',
+            components: {'form-component': FormComponent},
+            data(){
+                return {
+                    titleLabel: 'The Title: ',
+                    authorLabel: 'The Author: '
+                }
+            },
+            methods: {
+                writeLabel() {
+                    const titleValue = document.querySelector('#title').value;
+                    const authorValue = document.querySelector('#author').value;
+                    this.titleLabel = titleValue;
+                    this.authorLabel = 'The Author: ' + authorValue;
+                }
+            }
+        })
+    </script>
+    
+</body>
+</html>
